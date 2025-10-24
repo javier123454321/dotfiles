@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ai_bash.sh - Natural language to runnable shell command assistant (EPHEMERAL SESSIONS)
+# ai_bash.sh - Natural language to runnable shell command assistant (EPHEMERAL SESSIONS + optional last command redo)
 # User Stories Implemented:
 # 1. One-line natural language -> shell command (ready to run on Enter)
 # 1b. Options if output not correct: conversation refine, manual edit, docs mode, exit
@@ -28,6 +28,8 @@ history_limit="$DEFAULT_HISTORY_LIMIT"
 session_name="main"
 interactive=false
 auto_run=false
+last_redo=false
+LAST_CMD_FILE="${AI_BASH_LAST_CMD_FILE:-$HOME/.scratch/ai_bash_last_cmd}"
 system_prompt=""
 user_message=""
 dry_run=false
@@ -54,6 +56,7 @@ Options:
       --history-limit N      History size (default: $DEFAULT_HISTORY_LIMIT)
       --auto-run             Auto-run first generated command (still shows menu)
       --dry-run              Show payloads; skip API calls
+  -l, --last-redo           Run last executed command from previous invocation (if stored)
   -h, --help                 Show help
 
 Menu (single-shot; exits after run):
@@ -88,6 +91,7 @@ while [[ $# -gt 0 ]]; do
     --history-limit) history_limit="${2:-}"; shift ;;
     --auto-run) auto_run=true ;;
     --dry-run) dry_run=true ;;
+    -l|--last-redo) last_redo=true ;;
     -h|--help) show_help; exit 0 ;;
     --) shift; break ;;
     -*) die "Unknown flag $1" ;;
@@ -117,7 +121,7 @@ fi
 
 if [[ -z "$system_prompt" ]]; then
   # Default prompt focused on command generation only
-  system_prompt="You translate user natural language intents into SAFE, concise, POSIX-compliant shell commands.\nRules:\n- Output ONLY the runnable command(s); no explanation.\n- Prefer a single line if feasible.\n- NEVER assume destructive operations unless explicitly stated (rm, mv overwrite, chmod 777).\n- If intent is ambiguous, output a single line starting with '# clarify:' followed by a short clarification question; no command.\n- Use portable POSIX syntax; avoid aliases.\n- If user asks for complex multi-step, chain with '&&' or provide multiple lines.\n- Avoid unneeded subshells and UUOC.\n- For file safety, default to listing or dry-run style if user asks vaguely for deletion."
+  system_prompt="You translate user natural language intents into SAFE, concise, POSIX-compliant shell commands.\nRules:\n- Output ONLY the runnable command(s); no explanation.\n- Prefer a single line if feasible.\n- NEVER assume destructive operations unless explicitly stated (rm, mv overwrite, chmod 777).\n- If intent is ambiguous, output a single line starting with '# clarify:' followed by a short clarification question; no command.\n- Use portable POSIX syntax; avoid aliases.\n- If user asks for complex multi-step, chain with '&&' or provide multiple lines.\n- Avoid unneeded subshells and UUOC.\n- For file safety, default to listing or dry-run style if user asks vaguely for deletion.\nOnly use MacOS tools."
 fi
 
 # --- Session (Ephemeral) ------------------------------------------------------
@@ -198,20 +202,32 @@ run_current(){
   if [[ -z "$current_command" ]]; then echo "No command to run"; return 1; fi
   if [[ "$current_command" =~ ^#\ clarify: ]]; then
     echo "Cannot run clarification line. Refine first."; return 1; fi
-  echo "=== Running ==="
-  echo "$current_command" | $bat_cmd -l sh
+
+  echo "Running '$current_command'\n"
   if [[ "$dry_run" == true ]]; then echo "(dry-run: not executed)"; return 0; fi
   set +e
   eval "$current_command"
   local ec=$?
   set -e
   last_executed_command="$current_command"
-  echo "=== Exit Code: $ec ==="
+{ umask 077; printf '%s\n' "$last_executed_command" > "$LAST_CMD_FILE" 2>/dev/null || true; }
+  # echo success or fail based on exit code
+  if [[ $ec -eq 0 ]]; then
+    echo "\nSUCCESS"
+  else
+    echo "\nFAILED (Exit Code: $ec)"
+  fi
   return $ec
 }
 
 redo_last(){
-  if [[ -z "$last_executed_command" ]]; then echo "No last command"; return 1; fi
+  if [[ -z "$last_executed_command" ]]; then
+  if [[ -r "$LAST_CMD_FILE" ]]; then
+    last_executed_command="$(<"$LAST_CMD_FILE")"
+  else
+    echo "No last command"; return 1
+  fi
+fi
   current_command="$last_executed_command"
   run_current
 }
@@ -316,11 +332,21 @@ if [[ "$interactive" == true && -z "$user_message" ]]; then
   exit 0
 fi
 
+if [[ "$last_redo" == true ]]; then
+  if [[ -r "$LAST_CMD_FILE" ]]; then
+    current_command="$(<"$LAST_CMD_FILE")"
+    run_current
+    exit $?
+  else
+    echo "No stored last command to redo." >&2
+    exit 1
+  fi
+fi
+
 if [[ -z "$user_message" ]]; then
   die "No natural language request provided (or use -i for conversation)"
 fi
 
-echo "Generating: '$user_message'\n"
 generate_command "$user_message"
 print_current
 if [[ "$auto_run" == true ]]; then run_current; fi

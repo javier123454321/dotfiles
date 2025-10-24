@@ -25,6 +25,8 @@ alias nv='nvim'
 alias v='nvim'
 
 alias ai="$script_dir/scripts/workers_ai.sh"
+alias bai="$script_dir/scripts/ai_bash.sh"
+alias bailast="$script_dir/scripts/ai_bash.sh -l"
 
 alias lvim=~/.local/bin/lvim
 
