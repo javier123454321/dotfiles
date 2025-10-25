@@ -1,7 +1,11 @@
 export ZSH="$HOME/.oh-my-zsh"
 
-ZSH_THEME="adusa"
-#ZSH_THEME="robbyrussell"
+# Check my profile 
+if [[ $USER == "p70009t" ]]; then
+  ZSH_THEME="adusa"
+else
+  ZSH_THEME="robbyrussell"
+fi
 
 # DISABLE_AUTO_UPDATE=true
 zstyle ':omz:update' mode disabled  # disable automatic updates

@@ -13,6 +13,8 @@ local lsp_plugins_table = {
 					"lua_ls",
 					"hyprls",
 					"gopls",
+					"clangd",
+					"jdtls",
 				},
 				automatic_enable = true,
 				automatic_installation = true,
@@ -180,11 +182,9 @@ local lsp_plugins_table = {
 					},
 				},
 			})
-			local lsp = require("lspconfig")
-			lsp.jdtls.setup({})
-			lsp.clangd.setup({})
-			lsp.gopls.setup({})
-		
+			vim.lsp.config("jdtls", {})
+			vim.lsp.config("clangd", {})
+			vim.lsp.config("gopls", {})
 
 			vim.api.nvim_create_autocmd("LspAttach", {
 				group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
@@ -260,6 +260,7 @@ local lsp_plugins_table = {
 					then
 						local highlight_augroup =
 							vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
+
 						vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 							buffer = event.buf,
 							group = highlight_augroup,
@@ -386,6 +387,8 @@ local lsp_plugins_table = {
 				lua = { "stylua" },
 				javascript = { "eslint" },
 				typescript = { "eslint" },
+				json = { "fixjson" },
+				go = { "gofmt" },
 			},
 		},
 	},
@@ -413,6 +416,15 @@ local lsp_plugins_table = {
 				preset = "enter",
 				-- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
 				--    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
+				["<C-n>"] = {
+					function()
+						if require("blink.cmp").is_visible() then
+							return require("blink.cmp").select_next()
+						else
+							return require("blink.cmp").show()
+						end
+					end,
+				},
 			},
 			appearance = {
 				-- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
@@ -420,7 +432,6 @@ local lsp_plugins_table = {
 				nerd_font_variant = "mono",
 			},
 			completion = {
-				-- By default, you may press `<c-space>` to show the documentation.
 				-- Optionally, set `auto_show = true` to show the documentation after a delay.
 				documentation = { auto_show = true, auto_show_delay_ms = 500 },
 			},

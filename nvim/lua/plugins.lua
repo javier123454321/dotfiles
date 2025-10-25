@@ -487,8 +487,7 @@ require("lazy").setup({
 					debounce = 75,
 					trigger_on_accept = true,
 					keymap = {
-						accept = "<C-y>",
-						accept_word = false,
+						accept = "<C-Enter>",
 						accept_line = false,
 						next = "<C-\\>",
 						prev = "<C-/>",
@@ -503,6 +502,8 @@ require("lazy").setup({
 				require("copilot.suggestion").next()
 			end, { expr = true, desc = "Enable Copilot Suggestions" })
 			vim.keymap.set("n", "<leader>[]", function()
+				--print to vim statusline
+				
 				require("copilot.command").disable()
 			end, { expr = true, desc = "Disable Copilot Suggestions" })
 		end,
