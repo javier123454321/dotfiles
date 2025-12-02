@@ -387,6 +387,7 @@ local lsp_plugins_table = {
 				lua = { "stylua" },
 				javascript = { "eslint" },
 				typescript = { "eslint" },
+				vue = { "eslint" },
 				json = { "fixjson" },
 				go = { "gofmt" },
 			},

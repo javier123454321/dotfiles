@@ -395,7 +395,7 @@ require("lazy").setup({
 		},
 		keys = {
 			{
-				"C-y",
+				"<C-y>",
 				function()
 					-- if there is a next edit, jump to it, otherwise apply it if any
 					if not require("sidekick").nes_jump_or_apply() then
@@ -513,7 +513,8 @@ require("lazy").setup({
 		event = "VeryLazy",
 		config = function()
 			require("browsher").setup({
-				default_pin = "branch",
+				default_pin = "tag",
+				default_branch = "main",
 				open_cmd = "open",
 				allow_line_numbers_with_uncommitted_changes = true,
 			})

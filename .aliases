@@ -28,6 +28,8 @@ alias ai="$script_dir/scripts/workers_ai.sh"
 alias bai="$script_dir/scripts/ai_bash.sh"
 alias bailast="$script_dir/scripts/ai_bash.sh -l"
 
+alias aisearch="$script_dir/scripts/srch_online.sh"
+
 alias lvim=~/.local/bin/lvim
 
 # ADUSA specific stuff
@@ -111,4 +113,3 @@ function run() {
   sh $script_dir/scripts/setup-env.sh $1 $2
   rd
 }
-
