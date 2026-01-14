@@ -126,6 +126,7 @@ fi
 
 
 export PATH="$HOME/.local/bin:$PATH"
+source "$HOME/.cargo/bin/"
 export NODE_EXTRA_CA_CERTS=/Users/p70009t/.scratch/zscaler_root.cer
 
 if [[ "$PROFILE_STARTUP" == true ]]; then

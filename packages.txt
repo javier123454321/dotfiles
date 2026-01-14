@@ -1,8 +1,8 @@
-brew
-alacritty
-aerospace
+# tap
+nikitabobko/tap
+
+# brew
 tmux
-tms
 neovim
 lazygit
 gh
@@ -14,8 +14,20 @@ go
 cmake
 python
 node
-nvm
 yarn
+mise
+opencode
+ghostty
+
+# cask
+nikitabobko/tap/aerospace
 docker
-docker-compose
-rg
+tmux-sessionizer
+
+# rustup
+rust
+
+# nvm
+nvm
+
+#custom instructions

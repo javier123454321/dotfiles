@@ -137,10 +137,10 @@ require("lazy").setup({
 	{
 		-- Fuzzy Finder (files, lsp, etc)
 		"nvim-telescope/telescope.nvim",
+		tag = "0.1.8",
 		event = "VimEnter",
-		branch = "0.1.4",
 		dependencies = {
-			"nvim-lua/plenary.nvim",
+			{ "nvim-lua/plenary.nvim", branch = "master" },
 			{ -- If encountering errors, see telescope-fzf-native README for installation instructions
 				"nvim-telescope/telescope-fzf-native.nvim",
 
@@ -186,29 +186,44 @@ require("lazy").setup({
 	},
 	{
 		"nvim-treesitter/nvim-treesitter",
+		build = ":TSUpdate",
 		config = function()
-			require("nvim-treesitter.configs").setup({
-				ensure_installed = { "c", "lua", "vimdoc", "query", "vue", "typescript" },
-				auto_install = true,
-				highlight = {
-					enable = true,
-				},
-				modules = {},
-				sync_install = false,
-				ignore_install = {},
-				incremental_selection = {
-					enable = true,
-					keymaps = {
-						-- start selection first then use increase or decrease to select more within
-						-- i.e. <leader>ss <leader<sc> selects the scope of the function
-						init_selection = "<leader>ss",
-						node_incremental = "<leader>si",
-						scope_incremental = "<leader>sc",
-						node_decremental = "<leader>sd",
-					},
-				},
+			-- New API: configure via vim.treesitter and install parsers directly
+			vim.treesitter.language.register("typescript", "vue")
+
+			-- Ensure parsers are installed
+			local ensure_installed = { "c", "lua", "vimdoc", "query", "vue", "typescript", "javascript", "go", "sh", "zsh" }
+			local installed = require("nvim-treesitter.install")
+			for _, lang in ipairs(ensure_installed) do
+				pcall(function() installed.ensure_installed(lang) end)
+			end
+
+			-- Enable treesitter highlighting
+			vim.api.nvim_create_autocmd("FileType", {
+				callback = function()
+					pcall(vim.treesitter.start)
+				end,
 			})
+
 		end,
+	},
+	{
+    'MeanderingProgrammer/treesitter-modules.nvim',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    ---@module 'treesitter-modules'
+    ---@type ts.mod.UserConfig
+    opts = {
+			incremental_selection = {
+        enable = true,
+        disable = false,
+        keymaps = {
+            init_selection = '<leader>ss',
+            node_incremental = '<leader>si',
+            scope_incremental = '<leader>sc',
+            node_decremental = '<leader>sd',
+        },
+			},
+		},
 	},
 	{
 		"echasnovski/mini.nvim",
