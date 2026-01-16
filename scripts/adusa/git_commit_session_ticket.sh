@@ -1,5 +1,5 @@
 #/usr/local/bin/bash
-source ~/.scratch/scripts/session_ticket_functions.sh
+source "$(dirname "$0")/session_ticket_functions.sh"
 
 if [[ -z $ticket || $ticket == 'CXPVSP-' ]]; then
   echo "Ticket is not set"

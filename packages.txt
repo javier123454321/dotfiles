@@ -18,14 +18,11 @@ yarn
 mise
 opencode
 ghostty
+mkcert
 
 # cask
 nikitabobko/tap/aerospace
 docker
-tmux-sessionizer
-
-# rustup
-rust
 
 # nvm
 nvm

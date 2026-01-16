@@ -32,7 +32,11 @@ alias aisearch="$script_dir/scripts/srch_online.sh"
 
 alias lvim=~/.local/bin/lvim
 
+alias pn=pnpm
+
 # ADUSA specific stuff
+
+alias pnd="pnpm -F prism dev"
 
 alias gtn='cd ~/workspace/nuclei/'
 alias gtncl='cd ~/workspace/nuclei/'
@@ -43,25 +47,22 @@ alias gtsho='cd ~/workspace/client/doc/alaska/shop/'
 alias stcl='cd ~/workspace/client/ && sh start.sh 9443'
 alias stsho='cd ~/workspace/client/doc/alaska/shop/ && yarn run dev'
 
-alias opco="sh $script_dir/scripts/run_dev.sh"
-
-
 alias vncl="cd ~/workspace/nuclei && nvim"
 alias refine="nv $script_dir/refinement/tickets.txt"
 
-alias ref="sh $script_dir/scripts/add_ticket_to_refinement.sh"
+alias ref="sh $script_dir/scripts/adusa/add_ticket_to_refinement.sh"
 
-alias cb="sh $script_dir/scripts/checkout-branch.sh"
+alias cb="sh $script_dir/scripts/adusa/checkout-branch.sh"
 alias ctb="cb $ticket"
 
 
 alias lastCommit="echo '$(git log -1 --pretty=format:%s | sed 's/\\n//g')'"
 alias lc=lastCommit
 
-alias gc="sh $script_dir/scripts/git_commit.sh"
-alias gcp="sh $script_dir/scripts/git_commit_prev_ticket.sh"
+alias gc="sh $script_dir/scripts/adusa/git_commit.sh"
+alias gcp="sh $script_dir/scripts/adusa/git_commit_prev_ticket.sh"
 function gct() {
-  sh $script_dir/scripts/git_commit_session_ticket.sh "$@"
+  sh $script_dir/scripts/adusa/git_commit_session_ticket.sh "$@"
   if command -v tmux >/dev/null 2>&1; then
     local env_line
     env_line=$(tmux showenv -g ticket 2>/dev/null | grep '^ticket=' || true)
@@ -99,17 +100,12 @@ function gtt() {
 }
 
 function setTicketOnShell() {
-  source $script_dir/scripts/set_session_ticket.sh $1
+  source $script_dir/scripts/adusa/set_session_ticket.sh $1
   source ~/.zshrc
 }
 
 function setTicket() {
-  source $script_dir/scripts/set_session_ticket.sh $1
-  sh $script_dir/scripts/session_ticket_branch.sh
+  source $script_dir/scripts/adusa/set_session_ticket.sh $1
+  sh $script_dir/scripts/adusa/session_ticket_branch.sh
   source ~/.zshrc
-}
-
-function run() {
-  sh $script_dir/scripts/setup-env.sh $1 $2
-  rd
 }
