@@ -127,7 +127,7 @@ fi
 
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
-export NODE_EXTRA_CA_CERTS=/Users/p70009t/.scratch/zscaler_root.cer
+export NODE_EXTRA_CA_CERTS=~/.scratch/zscaler_root.cer
 
 if [[ "$PROFILE_STARTUP" == true ]]; then
     unsetopt xtrace
