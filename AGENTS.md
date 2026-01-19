@@ -1,6 +1,7 @@
 # Dotfiles and Configs
-
 This is a highly personalized config repository for the user's specific workflow.
+
+If I request a change in dotfiles, look for them in this repository first.
 
 The files are constantly being updated and tweaked for users' workflow.
 
