@@ -147,12 +147,29 @@ link_aerospace() {
     echo "Done linking aerospace config."
 }
 
+# --- OpenCode ---
+link_opencode() {
+    local dest_dir="$HOME/.config/opencode"
+    mkdir -p "$dest_dir"
+    
+    if [ ! -d "$dest_dir/skill/dev-browser" ]; then
+        echo "dev-browser skill not found, running setup_dev_browser.sh..."
+        if [ -f "$SOURCE_ROOT/setup_dev_browser.sh" ]; then
+            bash "$SOURCE_ROOT/setup_dev_browser.sh"
+        else
+            echo "Warning: setup_dev_browser.sh not found at $SOURCE_ROOT/setup_dev_browser.sh"
+        fi
+    fi
+    
+    create_hard_links_from_dir "$SOURCE_ROOT/opencode" "$dest_dir"
+}
+
 # --- Main Execution Logic ---
 echo "This script will help you set up your configuration files by creating hard links."
 echo "You will be prompted to select a configuration category to link."
 echo
 
-OPTIONS=("Scripts" "Dotfiles" "Nvim" "Tmuxinator" "Karabiner" "Zellij" "Aerospace" "Alacritty" "All" "Quit")
+OPTIONS=("Scripts" "Dotfiles" "Nvim" "Tmuxinator" "Karabiner" "Zellij" "Aerospace" "Alacritty" "OpenCode" "All" "Quit")
 
 while true; do
     echo "Select an option to link:"
@@ -199,6 +216,11 @@ while true; do
                 echo
                 break
                 ;;
+            "OpenCode")
+                link_opencode
+                echo
+                break
+                ;;
             "All")
                 link_scripts
                 link_dotfiles
@@ -208,6 +230,7 @@ while true; do
                 link_zellij
                 link_aerospace
                 link_alacritty
+                link_opencode
                 echo
                 break
                 ;;

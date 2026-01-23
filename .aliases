@@ -27,6 +27,7 @@ alias v='nvim'
 alias ai="$script_dir/scripts/workers_ai.sh"
 alias bai="$script_dir/scripts/ai_bash.sh"
 alias bailast="$script_dir/scripts/ai_bash.sh -l"
+alias ralph="$script_dir/scripts/ralph.sh"
 
 alias aisearch="$script_dir/scripts/srch_online.sh"
 
