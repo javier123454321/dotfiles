@@ -5,9 +5,14 @@ set -e
 # Parse arguments
 tool="opencode"
 max_iterations=10
+yolo_flag=""
 
 while [[ $# -gt 0 ]]; do
   case $1 in
+    --yolo)
+      yolo_flag="--yolo"
+      shift
+      ;;
     *)
       # Assume it's max_iterations if it's a number
       if [[ "$1" =~ ^[0-9]+$ ]]; then
@@ -60,13 +65,21 @@ echo "PRD location: $prd_file"
 # Change to project root so opencode runs in the right directory
 cd "$project_root"
 
+# Clear opencode environment variables to avoid conflicts when running nested opencode
+unset OPENCODE
+unset OPENCODE_SERVER_PASSWORD
+
 for i in $(seq 1 $max_iterations); do
   echo ""
   echo "==============================================================="
   echo "  Ralph Iteration $i of $max_iterations ($tool)"
   echo "==============================================================="
 
-  OUTPUT=$(opencode run 'use ralph-implementer skill to work on the current prd and for one task only' -m github-copilot/gpt-4o 2>&1 | tee /dev/stderr) || true
+   # Create a temp file for output
+   OUTPUT_FILE=$(mktemp)
+   opencode run 'use the "ralph implementer" skill to work on the current prd for one task only' -m github-copilot/gpt-4o $yolo_flag 2>&1 | tee "$OUTPUT_FILE" || true
+   OUTPUT=$(cat "$OUTPUT_FILE")
+   rm -f "$OUTPUT_FILE"
   
   # Check for completion signal
   if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then
