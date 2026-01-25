@@ -5,7 +5,7 @@ set -e
 # Parse arguments
 tool="opencode"
 max_iterations=10
-yolo_flag=""
+yolo_flag="--yolo"
 
 while [[ $# -gt 0 ]]; do
   case $1 in
