@@ -5,12 +5,12 @@ set -e
 # Parse arguments
 tool="opencode"
 max_iterations=10
-yolo_flag="--yolo"
+yolo_mode=true
 
 while [[ $# -gt 0 ]]; do
   case $1 in
-    --yolo)
-      yolo_flag="--yolo"
+    --no-yolo)
+      yolo_mode=false
       shift
       ;;
     *)
@@ -69,6 +69,12 @@ cd "$project_root"
 unset OPENCODE
 unset OPENCODE_SERVER_PASSWORD
 
+# Set YOLO mode (allow all permissions) by default
+if [ "$yolo_mode" = true ]; then
+  export OPENCODE_PERMISSION='{"*":"allow"}'
+  echo "YOLO mode enabled - all permissions allowed"
+fi
+
 for i in $(seq 1 $max_iterations); do
   echo ""
   echo "==============================================================="
@@ -77,7 +83,7 @@ for i in $(seq 1 $max_iterations); do
 
   # Create a temp file for output
   OUTPUT_FILE=$(mktemp)
-  opencode run $yolo_flag -m github-copilot/gpt-4o 'use the "ralph implementer" skill to work on the current prd for one task only' 2>&1 | tee "$OUTPUT_FILE" || true
+  opencode run -m github-copilot/gpt-4o 'use the "ralph implementer" skill to work on the current prd for one task only' 2>&1 | tee "$OUTPUT_FILE" || true
   OUTPUT=$(cat "$OUTPUT_FILE")
   rm -f "$OUTPUT_FILE"
   
