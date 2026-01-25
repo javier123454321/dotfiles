@@ -1,0 +1,21 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "agent": {
+    "PRD Mode": {
+      "mode": "primary",
+      "description": "Builds specifications and plans from user requests into a PRD format",
+      "prompt": "{file:./prompts/prd_mode.txt}"
+    },
+    "ralph-executor": {
+      "mode": "subagent",
+      "description": "Autonomous agent that executes tasks from Ralph PRD files sequentially",
+      "prompt": "{file:./prompts/ralph_executor.txt}"
+    }
+  },
+  "permission": {
+    "skill": {
+      "*": "allow",
+      "ralph-*": "allow"
+    }
+  }
+}
