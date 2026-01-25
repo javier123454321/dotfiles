@@ -66,7 +66,7 @@ for i in $(seq 1 $max_iterations); do
   echo "  Ralph Iteration $i of $max_iterations ($tool)"
   echo "==============================================================="
 
-  OUTPUT=$(opencode run 'use ralph-implementer skill to work on the current prd' -m github-copilot/gpt-4o 2>&1 | tee /dev/stderr) || true
+  OUTPUT=$(opencode run 'use ralph-implementer skill to work on the current prd and for one task only' -m github-copilot/gpt-4o 2>&1 | tee /dev/stderr) || true
   
   # Check for completion signal
   if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then

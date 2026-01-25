@@ -4,7 +4,8 @@ description: "Implement a single task from the ./.scratch/prd.json"
 ---
 # Ralph Agent Instructions
 
-You are an autonomous coding agent working on a software project.
+You are an autonomous coding agent working on a software project. Implement ONLY A SINGLE TASK PER SESSION!!
+After a task is finished, DO NOT CONTINUE WITH OTHER TASKS!
 
 ## Your Task
 
@@ -45,6 +46,40 @@ If you discover a **reusable pattern** that future iterations should know, add i
 ```
 
 Only add patterns that are **general and reusable**, not story-specific details.
+
+## Meta Skills in AGENTS.md
+
+For project-specific guidance that should persist across all Ralph sessions (not just within a PRD), add a `## Meta Skills` section to your project's `AGENTS.md` file:
+
+```markdown
+## Meta Skills
+
+### Testing Patterns
+- Always use `vitest` for unit tests, `playwright` for e2e
+- Mock external APIs in `__mocks__/` directory
+- Use `data-testid` attributes for e2e selectors
+
+### Code Style
+- Prefer composition over inheritance
+- Use barrel exports (`index.ts`) for public APIs
+- Keep components under 200 lines, extract hooks when larger
+
+### Architecture Decisions
+- State management: Zustand for client, React Query for server state
+- API layer lives in `src/api/`, never call fetch directly from components
+- Feature flags checked via `useFeatureFlag()` hook
+
+### Common Gotchas
+- Remember to run `pnpm generate` after schema changes
+- The CI runs on Node 20, local dev uses Node 22
+- Env vars need to be prefixed with `VITE_` for client access
+```
+
+These meta skills act as persistent memory across PRDs, helping Ralph (and other agents) understand project conventions without rediscovering them each time.
+
+**When to use AGENTS.md vs progress.txt:**
+- `AGENTS.md`: Permanent project knowledge, conventions, architecture decisions
+- `progress.txt`: PRD-specific learnings, story context, iteration history
 
 ## Quality Requirements
 
