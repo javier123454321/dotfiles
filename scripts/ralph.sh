@@ -75,11 +75,11 @@ for i in $(seq 1 $max_iterations); do
   echo "  Ralph Iteration $i of $max_iterations ($tool)"
   echo "==============================================================="
 
-   # Create a temp file for output
-   OUTPUT_FILE=$(mktemp)
-   opencode run 'use the "ralph implementer" skill to work on the current prd for one task only' -m github-copilot/gpt-4o $yolo_flag 2>&1 | tee "$OUTPUT_FILE" || true
-   OUTPUT=$(cat "$OUTPUT_FILE")
-   rm -f "$OUTPUT_FILE"
+  # Create a temp file for output
+  OUTPUT_FILE=$(mktemp)
+  opencode run $yolo_flag -m github-copilot/gpt-4o 'use the "ralph implementer" skill to work on the current prd for one task only' 2>&1 | tee "$OUTPUT_FILE" || true
+  OUTPUT=$(cat "$OUTPUT_FILE")
+  rm -f "$OUTPUT_FILE"
   
   # Check for completion signal
   if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then
