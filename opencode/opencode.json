@@ -17,6 +17,10 @@
     "playwright": {
       "type": "local",
       "command": [
+        "mise",
+        "exec",
+        "node@24",
+        "--",
         "npx",
         "@playwright/mcp@latest"
       ],
