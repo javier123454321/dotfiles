@@ -58,7 +58,7 @@ link_dotfiles() {
     echo "Linking dotfiles to $dest_dir..."
 
     # Files that are already dotfiles
-    for file in .aliases .gitconfig .zshrc; do
+    for file in .aliases .gitconfig .zshrc .bashrc; do
         if [ -f "$source_dir/$file" ]; then
             echo "  - Linking $file"
             ln -f "$source_dir/$file" "$dest_dir/$file"
