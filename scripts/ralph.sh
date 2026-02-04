@@ -6,12 +6,17 @@ set -e
 tool="opencode"
 max_iterations=10
 yolo_mode=true
+model="github-copilot/gpt-4o"
 
 while [[ $# -gt 0 ]]; do
   case $1 in
     --no-yolo)
       yolo_mode=false
       shift
+      ;;
+    --model)
+      model="$2"
+      shift 2
       ;;
     *)
       # Assume it's max_iterations if it's a number
@@ -58,7 +63,7 @@ if [ ! -f "$progress_file" ]; then
   echo "---" >> "$progress_file"
 fi
 
-echo "Starting Ralph - Tool: $tool - Max iterations: $max_iterations"
+echo "Starting Ralph - Tool: $tool - Max iterations: $max_iterations - Model: $model"
 echo "Project root: $project_root"
 echo "PRD location: $prd_file"
 
@@ -81,11 +86,11 @@ for i in $(seq 1 $max_iterations); do
   echo "  Ralph Iteration $i of $max_iterations ($tool)"
   echo "==============================================================="
 
-  # Create a temp file for output
-  OUTPUT_FILE=$(mktemp)
-  opencode run -m github-copilot/gpt-4o 'use the "ralph implementer" skill to work on the current prd for one task only' 2>&1 | tee "$OUTPUT_FILE" || true
-  OUTPUT=$(cat "$OUTPUT_FILE")
-  rm -f "$OUTPUT_FILE"
+   # Create a temp file for output
+   OUTPUT_FILE=$(mktemp)
+   opencode run -m "$model" 'use the "ralph implementer" skill to work on the current prd for one task only' 2>&1 | tee "$OUTPUT_FILE" || true
+   OUTPUT=$(cat "$OUTPUT_FILE")
+   rm -f "$OUTPUT_FILE"
   
   # Check for completion signal
   if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then
