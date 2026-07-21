@@ -6,8 +6,8 @@
   required = true
   clean = git-lfs clean -- %f
 [user]
-  name = JavierEGonzalez
-  email = javier.gonzalez1@adusa.com
+  name = javier123454321
+  email = javier.e.glz@gmail.com
 [core]
   excludesFile = ~/.scratch/.gitignore
   editor = nvim

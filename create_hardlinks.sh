@@ -151,16 +151,6 @@ link_aerospace() {
 link_opencode() {
     local dest_dir="$HOME/.config/opencode"
     mkdir -p "$dest_dir"
-    
-    if [ ! -d "$dest_dir/skill/dev-browser" ]; then
-        echo "dev-browser skill not found, running setup_dev_browser.sh..."
-        if [ -f "$SOURCE_ROOT/setup_dev_browser.sh" ]; then
-            bash "$SOURCE_ROOT/setup_dev_browser.sh"
-        else
-            echo "Warning: setup_dev_browser.sh not found at $SOURCE_ROOT/setup_dev_browser.sh"
-        fi
-    fi
-    
     create_hard_links_from_dir "$SOURCE_ROOT/opencode" "$dest_dir"
 }
 

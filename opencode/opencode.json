@@ -1,17 +1,8 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "agent": {
-    "PRD Mode": {
-      "mode": "primary",
-      "description": "Builds specifications and plans from user requests into a PRD format",
-      "prompt": "{file:./prompts/prd_mode.txt}"
-    }
   },
   "permission": {
-    "skill": {
-      "*": "allow",
-      "ralph-*": "allow"
-    }
   },
   "mcp": {
     "playwright": {
