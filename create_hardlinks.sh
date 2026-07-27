@@ -147,11 +147,26 @@ link_aerospace() {
     echo "Done linking aerospace config."
 }
 
-# --- OpenCode ---
-link_opencode() {
-    local dest_dir="$HOME/.config/opencode"
-    mkdir -p "$dest_dir"
-    create_hard_links_from_dir "$SOURCE_ROOT/opencode" "$dest_dir"
+# --- Agents (OpenCode config + external agents/skills) ---
+link_agents() {
+    local opencode_dest="$HOME/.config/opencode"
+    local agents_dest="$HOME/.agents"
+
+    mkdir -p "$opencode_dest"
+    mkdir -p "$agents_dest"
+
+    echo "Linking opencode config to $opencode_dest..."
+    find "$SOURCE_ROOT/opencode" -maxdepth 1 -mindepth 1 ! -name 'external-agents' | while read -r item; do
+        if [ -d "$item" ]; then
+            create_hard_links_from_dir "$item" "$opencode_dest/$(basename "$item")"
+        elif [ -f "$item" ]; then
+            echo "  - Linking $(basename "$item")"
+            ln -f "$item" "$opencode_dest/$(basename "$item")"
+        fi
+    done
+    echo "Done linking opencode config."
+
+    create_hard_links_from_dir "$SOURCE_ROOT/opencode/external-agents" "$agents_dest"
 }
 
 # --- Main Execution Logic ---
@@ -159,7 +174,7 @@ echo "This script will help you set up your configuration files by creating hard
 echo "You will be prompted to select a configuration category to link."
 echo
 
-OPTIONS=("Scripts" "Dotfiles" "Nvim" "Tmuxinator" "Karabiner" "Zellij" "Aerospace" "Alacritty" "OpenCode" "All" "Quit")
+OPTIONS=("Scripts" "Dotfiles" "Nvim" "Tmuxinator" "Karabiner" "Zellij" "Aerospace" "Alacritty" "Agents" "All" "Quit")
 
 while true; do
     echo "Select an option to link:"
@@ -206,8 +221,8 @@ while true; do
                 echo
                 break
                 ;;
-            "OpenCode")
-                link_opencode
+            "Agents")
+                link_agents
                 echo
                 break
                 ;;
@@ -220,7 +235,7 @@ while true; do
                 link_zellij
                 link_aerospace
                 link_alacritty
-                link_opencode
+                link_agents
                 echo
                 break
                 ;;
