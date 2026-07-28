@@ -1,13 +1,18 @@
+[terminal]
+osc52 = "CopyPaste"
+
 [font]
 size = 21.0
 normal = { family = "JetBrainsMono Nerd Font Mono", style = "Regular" }
 
-[[keyboard.bindings]]
-key = "F"
-mods = "Command"
-action = "None"
+[keyboard]
+bindings = [
+  { key = "Insert", mods = "Shift", action = "Paste" },
+  { key = "Insert", mods = "Control", action = "Copy" },
+  { key = "F", mods = "Command", action = "None" },
+]
 
 [general]
 import = [
-    "~/.config/alacritty/themes/themes/dark_plus.toml"
+    "~/.config/omarchy/current/theme/alacritty.toml",
 ]
