@@ -137,7 +137,7 @@ require("lazy").setup({
 	{
 		-- Fuzzy Finder (files, lsp, etc)
 		"nvim-telescope/telescope.nvim",
-		tag = "0.1.8",
+		branch = "master",
 		event = "VimEnter",
 		dependencies = {
 			{ "nvim-lua/plenary.nvim", branch = "master" },
@@ -161,6 +161,13 @@ require("lazy").setup({
 		},
 		config = function()
 			require("telescope").setup({
+				defaults = {
+					preview = {
+						treesitter = {
+							enable = false,
+						},
+					},
+				},
 				extensions = {
 					["ui-select"] = {
 						require("telescope.themes").get_dropdown(),
@@ -186,44 +193,105 @@ require("lazy").setup({
 	},
 	{
 		"nvim-treesitter/nvim-treesitter",
+		lazy = false,
 		build = ":TSUpdate",
 		config = function()
-			-- New API: configure via vim.treesitter and install parsers directly
-			vim.treesitter.language.register("typescript", "vue")
-
-			-- Ensure parsers are installed
-			local ensure_installed = { "c", "lua", "vimdoc", "query", "vue", "typescript", "javascript", "go", "sh", "zsh" }
-			local installed = require("nvim-treesitter.install")
-			for _, lang in ipairs(ensure_installed) do
-				pcall(function() installed.ensure_installed(lang) end)
-			end
-
-			-- Enable treesitter highlighting
-			vim.api.nvim_create_autocmd("FileType", {
-				callback = function()
-					pcall(vim.treesitter.start)
-				end,
+			require("nvim-treesitter").setup({
+				-- List of parsers to install
+				-- To add a new language:
+				--   1. Add the parser name to this list (e.g., "python", "rust", "markdown")
+				--   2. Restart Neovim or run :Lazy sync then restart
+				--   3. The parser will auto-install on next startup
+				--   4. treesitter-modules.nvim will auto-enable highlight, fold, and
+				--      incremental selection for the new language
+				-- To verify a parser is installed: :TSStatus
+				-- To manually install without restarting: :TSInstall <language>
+				ensure_installed = {
+					"c",
+					"lua",
+					"vimdoc",
+					"query",
+					"vue",
+					"typescript",
+					"javascript",
+					"tsx",
+					"go",
+					"bash",
+					"html",
+					"css",
+					"json",
+					"yaml",
+					"sh"
+				},
+				auto_install = true,
 			})
-
 		end,
 	},
 	{
-    'MeanderingProgrammer/treesitter-modules.nvim',
-    dependencies = { 'nvim-treesitter/nvim-treesitter' },
-    ---@module 'treesitter-modules'
-    ---@type ts.mod.UserConfig
-    opts = {
+		'MeanderingProgrammer/treesitter-modules.nvim',
+		dependencies = { 'nvim-treesitter/nvim-treesitter' },
+		---@module 'treesitter-modules'
+		---@type ts.mod.UserConfig
+		opts = {
+			highlight = {
+				enable = true,
+			},
+			fold = {
+				enable = true,
+			},
 			incremental_selection = {
-        enable = true,
-        disable = false,
-        keymaps = {
-            init_selection = '<leader>ss',
-            node_incremental = '<leader>si',
-            scope_incremental = '<leader>sc',
-            node_decremental = '<leader>sd',
-        },
+				enable = true,
+				keymaps = {
+					init_selection = '<leader>ss',
+					node_incremental = '<leader>si',
+					scope_incremental = '<leader>sc',
+					node_decremental = '<leader>sd',
+				},
 			},
 		},
+	},
+	{
+		---@type LazySpec
+		"mikavilpas/yazi.nvim",
+		version = "*", -- use the latest stable version
+		event = "VeryLazy",
+		dependencies = {
+			{ "nvim-lua/plenary.nvim", lazy = true },
+		},
+		keys = {
+			{
+				"`",
+				mode = { "n", "v" },
+				"<cmd>Yazi<cr>",
+				desc = "Open yazi at the current file",
+			},
+			{
+				-- Open in the current working directory
+				"<leader>cw",
+				"<cmd>Yazi cwd<cr>",
+				desc = "Open the file manager in nvim's working directory",
+			},
+			{
+				"<leader>`",
+				"<cmd>Yazi toggle<cr>",
+				desc = "Resume the last yazi session",
+			},
+		},
+		---@type YaziConfig | {}
+		opts = {
+			-- if you want to open yazi instead of netrw, see below for more info
+			open_for_directories = false,
+			keymaps = {
+				show_help = "<f1>",
+			},
+		},
+		-- 👇 if you use `open_for_directories=true`, this is recommended
+		init = function()
+			-- mark netrw as loaded so it's not loaded at all.
+			--
+			-- More details: https://github.com/mikavilpas/yazi.nvim/issues/802
+			vim.g.loaded_netrwPlugin = 1
+		end,
 	},
 	{
 		"echasnovski/mini.nvim",
@@ -289,42 +357,42 @@ require("lazy").setup({
 				return "%2l:%-2v"
 			end
 
-			require("mini.files").setup({
-				content = {
-					filter = nil,
-					prefix = nil,
-					sort = nil,
-				},
-
-				-- Module mappings created only inside explorer.
-				-- Use `''` (empty string) to not create one.
-				mappings = {
-					close = "q",
-					go_in = "l",
-					go_in_plus = "<cr>",
-					go_out = "h",
-					go_out_plus = "H",
-					mark_goto = "'",
-					mark_set = "m",
-					reset = "<BS>",
-					reveal_cwd = "@",
-					show_help = "g?",
-					synchronize = "=",
-					trim_left = "<",
-					trim_right = ">",
-				},
-				options = {
-					permanent_delete = true,
-					use_as_default_explorer = true,
-				},
-				windows = {
-					max_number = math.huge,
-					preview = true,
-					width_focus = 50,
-					width_nofocus = 15,
-					width_preview = 25,
-				},
-			})
+			-- require("mini.files").setup({
+			-- 	content = {
+			-- 		filter = nil,
+			-- 		prefix = nil,
+			-- 		sort = nil,
+			-- 	},
+			--
+			-- 	-- Module mappings created only inside explorer.
+			-- 	-- Use `''` (empty string) to not create one.
+			-- 	mappings = {
+			-- 		close = "q",
+			-- 		go_in = "l",
+			-- 		go_in_plus = "<cr>",
+			-- 		go_out = "h",
+			-- 		go_out_plus = "H",
+			-- 		mark_goto = "'",
+			-- 		mark_set = "m",
+			-- 		reset = "<BS>",
+			-- 		reveal_cwd = "@",
+			-- 		show_help = "g?",
+			-- 		synchronize = "=",
+			-- 		trim_left = "<",
+			-- 		trim_right = ">",
+			-- 	},
+			-- 	options = {
+			-- 		permanent_delete = true,
+			-- 		use_as_default_explorer = true,
+			-- 	},
+			-- 	windows = {
+			-- 		max_number = math.huge,
+			-- 		preview = true,
+			-- 		width_focus = 50,
+			-- 		width_nofocus = 15,
+			-- 		width_preview = 25,
+			-- 	},
+			-- })
 
 			-- use ` to open MiniFiles
 			vim.keymap.set("n", "`", function()
@@ -518,7 +586,7 @@ require("lazy").setup({
 			end, { expr = true, desc = "Enable Copilot Suggestions" })
 			vim.keymap.set("n", "<leader>[]", function()
 				--print to vim statusline
-				
+
 				require("copilot.command").disable()
 			end, { expr = true, desc = "Disable Copilot Suggestions" })
 		end,
@@ -536,11 +604,13 @@ require("lazy").setup({
 		end,
 	},
 	{
-		"https://github.com/aaronik/treewalker.nvim",
-		opts = {
-			highlight = true,
-		},
-		config = function ()
+		"aaronik/treewalker.nvim",
+		config = function()
+			require('treewalker').setup({
+				highlight = true,
+				highlight_duration = 250,
+			})
+
 			vim.keymap.set({ 'n', 'v' }, '<up>', '<cmd>Treewalker Up<cr>', { silent = true })
 			vim.keymap.set({ 'n', 'v' }, '<down>', '<cmd>Treewalker Down<cr>', { silent = true })
 			vim.keymap.set({ 'n', 'v' }, '<left>', '<cmd>Treewalker Left<cr>', { silent = true })
@@ -551,7 +621,7 @@ require("lazy").setup({
 			vim.keymap.set('n', '<leader><right>', '<cmd>Treewalker SwapRight<cr>', { silent = true })
 			vim.keymap.set('n', '<leader><left>', '<cmd>Treewalker SwapLeft<cr>', { silent = true })
 			vim.keymap.set('n', '<leader><down>', '<cmd>Treewalker SwapDown<cr>', { silent = true })
-		end
+		end,
 	},
 	{ -- annotations like tsdoc
 		"danymat/neogen",
