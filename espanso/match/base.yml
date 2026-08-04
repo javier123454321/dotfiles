@@ -1,0 +1,7 @@
+matches:
+  - trigger: ":hello"
+    replace: "Hello there!"
+  - trigger: ":date"
+    replace: "{{mydate}}"
+  - trigger: ":gm"
+    replace: "javier.e.glz@gmail.com"

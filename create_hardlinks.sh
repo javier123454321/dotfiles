@@ -58,7 +58,7 @@ link_dotfiles() {
     echo "Linking dotfiles to $dest_dir..."
 
     # Files that are already dotfiles
-    for file in .aliases .gitconfig .zshrc .bashrc; do
+    for file in .aliases .gitconfig .zshrc .bashrc herdr_completion.zsh; do
         if [ -f "$source_dir/$file" ]; then
             echo "  - Linking $file"
             ln -f "$source_dir/$file" "$dest_dir/$file"
@@ -147,6 +147,14 @@ link_aerospace() {
     echo "Done linking aerospace config."
 }
 
+# --- Espanso ---
+link_espanso() {
+    local default_dest="$HOME/.config/espanso"
+    read -p "Enter destination directory for espanso configs (default: $default_dest): " dest_dir
+    dest_dir=${dest_dir:-$default_dest}
+    create_hard_links_from_dir "$SOURCE_ROOT/espanso" "$dest_dir"
+}
+
 # --- Agents (OpenCode config + external agents/skills) ---
 link_agents() {
     local opencode_dest="$HOME/.config/opencode"
@@ -174,7 +182,7 @@ echo "This script will help you set up your configuration files by creating hard
 echo "You will be prompted to select a configuration category to link."
 echo
 
-OPTIONS=("Scripts" "Dotfiles" "Nvim" "Tmuxinator" "Karabiner" "Zellij" "Aerospace" "Alacritty" "Agents" "All" "Quit")
+OPTIONS=("Scripts" "Dotfiles" "Nvim" "Tmuxinator" "Karabiner" "Zellij" "Aerospace" "Alacritty" "Espanso" "Agents" "All" "Quit")
 
 while true; do
     echo "Select an option to link:"
@@ -221,6 +229,11 @@ while true; do
                 echo
                 break
                 ;;
+            "Espanso")
+                link_espanso
+                echo
+                break
+                ;;
             "Agents")
                 link_agents
                 echo
@@ -235,6 +248,7 @@ while true; do
                 link_zellij
                 link_aerospace
                 link_alacritty
+                link_espanso
                 link_agents
                 echo
                 break

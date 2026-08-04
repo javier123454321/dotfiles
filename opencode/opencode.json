@@ -10,59 +10,59 @@
   "agent": {
     "plan": {
       "mode": "primary",
-      "model": "github-copilot/claude-opus-4.6",
+      "model": "opencode-go/grok-4.5",
       "options": {},
       "permission": {}
     },
     "general": {
       "mode": "subagent",
-      "model": "github-copilot/claude-sonnet-4.6",
+      "model": "opencode-go/deepseek-v4-flash",
       "options": {},
       "permission": {}
     },
     "explore": {
       "mode": "subagent",
-      "model": "github-copilot/claude-haiku-4.5",
+      "model": "opencode-go/deepseek-v4-flash",
       "options": {},
       "permission": {}
     },
     "scout": {
       "mode": "subagent",
-      "model": "github-copilot/claude-sonnet-4.6",
+      "model": "opencode-go/deepseek-v4-flash",
       "options": {},
       "permission": {}
     },
     "single-task-worker": {
       "mode": "subagent",
-      "model": "github-copilot/claude-sonnet-4.6",
-      "options": {},
-      "permission": {}
-    },
-    "orchestrator": {
-      "model": "github-copilot/claude-opus-4.8",
+      "model": "opencode-go/grok-4.5",
       "options": {},
       "permission": {}
     },
     "lint-fixer": {
-      "model": "github-copilot/claude-haiku-4.5",
+      "model": "opencode/deepseek-v4-flash-free",
+      "options": {},
+      "permission": {}
+    },
+    "orchestrator": {
+      "model": "opencode-go/kimi-k2.7-code",
       "options": {},
       "permission": {}
     },
     "task-orchestrator": {
-      "model": "github-copilot/claude-opus-4.8",
+      "model": "opencode-go/kimi-k2.7-code",
       "options": {},
       "permission": {}
     },
     "micro-task-runner": {
       "mode": "subagent",
-      "model": "github-copilot/claude-haiku-4.5",
+      "model": "opencode-go/kimi-k2.6",
       "options": {},
       "permission": {}
     }
   },
   "skills": {
     "paths": [
-      "/Users/javiergonzalez/workspace/dotfiles/opencode/external-agents/skills"
+      "/home/javi/workspace/dotfiles/opencode/external-agents/skills"
     ]
   },
   "mcp": {

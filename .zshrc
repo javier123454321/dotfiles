@@ -113,6 +113,8 @@ set -o vi
 export PATH="$HOME/.jenv/bin:$PATH"
 export PATH="/usr/local/opt/openjdk/bin:$PATH"
 
+export PLAYWRIGHT_MCP_BROWSER=chromium
+
 #export NVM_DIR="$HOME/.nvm"
 #[ -s "/usr/local/opt/nvm/nvm.sh" ] && \. "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
 #[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
@@ -143,6 +145,9 @@ esac
 
 # bun completions
 [ -s "/Users/javiergonzalez/.bun/_bun" ] && source "/Users/javiergonzalez/.bun/_bun"
+
+# herdr completions
+[ -s ~/herdr_completion.zsh ] && source ~/herdr_completion.zsh
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
