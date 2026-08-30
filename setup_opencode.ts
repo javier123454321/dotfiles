@@ -174,17 +174,23 @@ async function main() {
     console.log(`\n  Agent: ${agentName}`);
     if (current.mode) console.log(`  Mode:  ${current.mode}`);
 
+    const isPrimary = (current.mode as string | undefined) === "primary";
     let chosenModel = currentModel;
-    if (models.length > 0) {
-      chosenModel = await pickModel(models, agentName, currentModel);
+    if (!isPrimary) {
+      if (models.length > 0) {
+        chosenModel = await pickModel(models, agentName, currentModel);
+      } else {
+        const raw = await ask(`  Model for "${agentName}" [${currentModel}]: `);
+        if (raw.trim()) chosenModel = raw.trim();
+      }
     } else {
-      const raw = await ask(`  Model for "${agentName}" [${currentModel}]: `);
-      if (raw.trim()) chosenModel = raw.trim();
+      console.log(`  Skipping model selection (primary agent — model set by provider).`);
     }
 
+    const isPrimary = (current.mode as string | undefined) === "primary";
     newAgents[agentName] = {
       ...(current as Record<string, unknown>),
-      model: chosenModel,
+      ...(isPrimary ? {} : { model: chosenModel }),
       options: current.options ?? {},
       permission: current.permission ?? {},
     };

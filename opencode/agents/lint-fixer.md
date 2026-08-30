@@ -33,7 +33,6 @@ description: >-
       </commentary>
     </example>
 mode: subagent
-model: github-copilot/claude-haiku-4.5
 permission:
   webfetch: deny
   websearch: deny

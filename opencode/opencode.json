@@ -16,13 +16,13 @@
     },
     "general": {
       "mode": "subagent",
-      "model": "opencode-go/deepseek-v4-flash",
+      "model": "opencode/deepseek-v4-flash-free",
       "options": {},
       "permission": {}
     },
     "explore": {
       "mode": "subagent",
-      "model": "opencode-go/deepseek-v4-flash",
+      "model": "opencode/deepseek-v4-flash-free",
       "options": {},
       "permission": {}
     },
@@ -34,12 +34,12 @@
     },
     "single-task-worker": {
       "mode": "subagent",
-      "model": "opencode-go/grok-4.5",
+      "model": "opencode-go/deepseek-v4-flash",
       "options": {},
       "permission": {}
     },
     "lint-fixer": {
-      "model": "opencode/deepseek-v4-flash-free",
+      "model": "opencode-go/deepseek-v4-flash",
       "options": {},
       "permission": {}
     },
@@ -55,7 +55,7 @@
     },
     "micro-task-runner": {
       "mode": "subagent",
-      "model": "opencode-go/kimi-k2.6",
+      "model": "opencode-go/deepseek-v4-flash",
       "options": {},
       "permission": {}
     }

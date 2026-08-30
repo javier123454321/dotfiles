@@ -5,3 +5,7 @@ matches:
     replace: "{{mydate}}"
   - trigger: ":gm"
     replace: "javier.e.glz@gmail.com"
+  - trigger: ":li"
+    replace: "https://www.linkedin.com/in/javier123454321/"
+  - trigger: ":io"
+    replace: "https://javiergonzalez.io"

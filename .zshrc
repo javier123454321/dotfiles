@@ -110,16 +110,11 @@ alias l='ls -CF'
 
 set -o vi
 
-export PATH="$HOME/.jenv/bin:$PATH"
-export PATH="/usr/local/opt/openjdk/bin:$PATH"
-
 export PLAYWRIGHT_MCP_BROWSER=chromium
 
 #export NVM_DIR="$HOME/.nvm"
 #[ -s "/usr/local/opt/nvm/nvm.sh" ] && \. "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
 #[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-
-echo 'eval "$(mise activate bash)"' >> ~/.bashrc
 
 # check if direnv exists
 if command -v direnv >/dev/null 2>&1; then
@@ -134,17 +129,16 @@ if [[ "$PROFILE_STARTUP" == true ]]; then
     exec 2>&3 3>&-
 fi
 
-# pnpm
-export PNPM_HOME="/Users/javiergonzalez/Library/pnpm"
+# pnpm - use mise-managed pnpm, fallback to XDG location
+export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # bun completions
-[ -s "/Users/javiergonzalez/.bun/_bun" ] && source "/Users/javiergonzalez/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # herdr completions
 [ -s ~/herdr_completion.zsh ] && source ~/herdr_completion.zsh
@@ -155,3 +149,12 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # Open in tmux popup if on tmux, otherwise use --height mode
 export FZF_DEFAULT_OPTS='--height 80% --width 80% --tmux --border top'
 eval "$(zoxide init zsh)"
+
+# >>> grok installer >>>
+export PATH="$HOME/.grok/bin:$PATH"
+fpath=(~/.grok/completions/zsh $fpath)
+autoload -Uz compinit && compinit -C
+# <<< grok installer <<<
+
+# mise - must be last so shims/tools win over ~/.local/bin, bun, grok
+eval "$(mise activate zsh)"

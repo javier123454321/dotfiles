@@ -155,6 +155,14 @@ link_espanso() {
     create_hard_links_from_dir "$SOURCE_ROOT/espanso" "$dest_dir"
 }
 
+# --- Herdr ---
+link_herdr() {
+    local default_dest="$HOME/.config/herdr"
+    read -p "Enter destination directory for herdr config (default: $default_dest): " dest_dir
+    dest_dir=${dest_dir:-$default_dest}
+    create_hard_links_from_dir "$SOURCE_ROOT/herdr" "$dest_dir"
+}
+
 # --- Agents (OpenCode config + external agents/skills) ---
 link_agents() {
     local opencode_dest="$HOME/.config/opencode"
@@ -182,7 +190,7 @@ echo "This script will help you set up your configuration files by creating hard
 echo "You will be prompted to select a configuration category to link."
 echo
 
-OPTIONS=("Scripts" "Dotfiles" "Nvim" "Tmuxinator" "Karabiner" "Zellij" "Aerospace" "Alacritty" "Espanso" "Agents" "All" "Quit")
+OPTIONS=("Scripts" "Dotfiles" "Nvim" "Tmuxinator" "Karabiner" "Zellij" "Aerospace" "Alacritty" "Espanso" "Herdr" "Agents" "All" "Quit")
 
 while true; do
     echo "Select an option to link:"
@@ -234,6 +242,11 @@ while true; do
                 echo
                 break
                 ;;
+            "Herdr")
+                link_herdr
+                echo
+                break
+                ;;
             "Agents")
                 link_agents
                 echo
@@ -249,6 +262,7 @@ while true; do
                 link_aerospace
                 link_alacritty
                 link_espanso
+                link_herdr
                 link_agents
                 echo
                 break
